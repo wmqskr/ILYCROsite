@@ -7,20 +7,20 @@ import torch.nn.functional as F
 import torch.optim as optim
 from MLP_Attention import MLP
 
-# 设备设置
+# Device setup
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(device)
 
-# 读取并准备数据
+# Read and prepare data
 data = pd.read_csv('./dataset/train/DR_kcr_cv.csv')
 X = data.drop('label', axis=1).values
 y = data['label'].values
 
-# 转换为torch的Tensor
+# Convert to torch Tensor
 X = torch.tensor(X, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.float32)
 
-# 划分数据集并创建DataLoader
+# Split dataset and create DataLoader
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 train_dataset = TensorDataset(X_train, y_train)
 test_dataset = TensorDataset(X_test, y_test)
@@ -28,8 +28,7 @@ test_dataset = TensorDataset(X_test, y_test)
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
-
-# 创建模型
+# Create model
 model = MLP().to(device)
 
 def train_and_evaluate(model, train_loader, test_loader, epochs):
@@ -49,7 +48,7 @@ def train_and_evaluate(model, train_loader, test_loader, epochs):
 
         print(f"Epoch {epoch + 1}, Loss: {loss.item()}")
 
-    # 保存模型
+    # Save model
     torch.save(model.state_dict(),'MLP_ATT_model6.pth')
     print("Model saved.")
 

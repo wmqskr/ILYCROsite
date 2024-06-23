@@ -9,11 +9,11 @@ data = pd.read_csv('./dataset_test/AAC_testData.csv')
 X = data.drop('label', axis=1).values
 y = data['label'].values
 
-# 转换为 torch 的 Tensor
+# Convert to torch Tensor
 X = torch.tensor(X, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.float32)
 
-# 划分数据集并创建 DataLoader
+# Split dataset and create DataLoader
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 train_dataset = TensorDataset(X_train, y_train)
 test_dataset = TensorDataset(X_test, y_test)
@@ -68,13 +68,13 @@ class MLP(nn.Module):
         return x
 
 model = MLP()
-# 加载保存的模型
+# Load saved model
 model.load_state_dict(torch.load('com_att_AAC0model.pth'))
 model.eval()
 
 import shap
 
-# 定义一个对模型的前向传播的包装，以便用于 SHAP
+# Define a wrapper for the model's forward pass for SHAP
 class ModelWrapper:
     def __init__(self, model):
         self.model = model
@@ -86,19 +86,19 @@ class ModelWrapper:
             outputs = self.model(tensor_X)
             return outputs.detach().numpy()
 
-# 使用较小的背景数据集
+# Use a smaller background dataset
 background = X_train.numpy()[:10]
 
-# 使用 Explainer
+# Use Explainer
 explainer = shap.Explainer(ModelWrapper(model).predict, background)
 
-# 准备测试数据
+# Prepare test data
 sample_test = X_test.numpy()[:3500]
 
 features = ['A', 'C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y']
-# 计算 SHAP 值
+# Calculate SHAP values
 shap_values = explainer.shap_values(sample_test)
 
-# 使用 summary_plot 绘制多个样本的 SHAP 值
+# Plot SHAP values for multiple samples using summary_plot
 shap.summary_plot(shap_values, sample_test, feature_names=features)
 shap.dependence_plot('P', shap_values, sample_test, feature_names=features)

@@ -7,16 +7,16 @@ import matplotlib.pyplot as plt
 import torch.nn as nn
 from MLP_Attention import MLP
 import time
-# 读取并准备数据
+# Read and prepare data
 data = pd.read_csv('yourpath')
 X = data.drop('label', axis=1).values
 y = data['label'].values
 
-# 转换为torch的Tensor
+# Convert to torch Tensor
 X = torch.tensor(X, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.float32)
 
-# 划分数据集并创建DataLoader
+# Split dataset and create DataLoader
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 train_dataset = TensorDataset(X_train, y_train)
 test_dataset = TensorDataset(X_test, y_test)
@@ -94,7 +94,7 @@ def train_and_evaluate(model, train_loader, test_loader, epochs):
 
     plt.show()
 
-    # 保存模型
+    # Save model
     torch.save(model, 'com_att_DR2testmodel.pth')
     print("Model saved.")
 

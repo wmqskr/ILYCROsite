@@ -9,7 +9,7 @@ def load_data(file_path):
     df = pd.read_csv(file_path)
     df.columns = df.iloc[0]
     df = df[1:]
-    # 去掉最后一列（标签）
+    # Remove the last column (label)
     df = df.iloc[:, :-1]
     scaler = MinMaxScaler()
     data = scaler.fit_transform(df.values)
@@ -82,7 +82,7 @@ def main(file_path, n_clusters=3, sigma=1.0, m=2, tol=1e-4, max_iter=100):
     U, centers = fcm_grnn_clustering(data, n_clusters, sigma, m, tol, max_iter)
     cluster_assignments = save_clusters(data, original_df, U, n_clusters)
 
-    # 从每个簇中选取部分样本作为负样本
+    # Select a portion of samples from each cluster as negative samples
     select_negative_samples(original_df, cluster_assignments, sample_ratio=0.2)
 
 

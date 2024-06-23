@@ -1,15 +1,15 @@
-#删除假代码X
+# Remove fake code X
 def remove_O_from_file(filename):
-    # 读取原始文件并删除所有 'X' 字符
+    # Read the original file and remove all 'X' characters
     with open(filename, 'r') as file:
         content = file.read()
         content_without_O = content.replace('O', '')
         content_without_U = content_without_O.replace('U', '')
-    # 将处理后的数据写入临时文件
+    # Write the processed data to a temporary file
     with open('./dataset/test/Kcr_INDP_cleaned.txt', 'w') as cleaned_file:
         cleaned_file.write(content_without_U)
 
-# 调用函数
+# Call the function
 # remove_O_from_file('./dataset/train/kcr_cvN.txt')
 # remove_O_from_file('./dataset/train/kcr_cvP.txt')
 # remove_O_from_file('./dataset/test/Kcr_INDN.txt')

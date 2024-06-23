@@ -4,7 +4,7 @@ from sklearn.metrics import roc_auc_score, confusion_matrix
 from torch.utils.data import DataLoader, TensorDataset
 from MLP_Attention import MLP, Attention
 
-# 设备设置
+# Device settings
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(device)
 
@@ -12,11 +12,11 @@ model = MLP().to(device)
 model.load_state_dict(torch.load('MLP_ATT_model6.pth', map_location=device))
 model.eval()
 
-# 替换为你的csv文件名和路径
+# Replace with your csv file name and path
 test_data_path = './dataset/test/DR_Kcr_IND.csv'
 test_data = pd.read_csv(test_data_path)
 
-# 假定最后一列为标签
+# Assume the last column is the label
 X_test = torch.tensor(test_data.iloc[:, :-1].values, dtype=torch.float32)
 y_test = torch.tensor(test_data.iloc[:, -1].values, dtype=torch.float32)
 
@@ -32,12 +32,12 @@ with torch.no_grad():
         X_batch = X_batch.to(device)
         y_batch = y_batch.to(device)
         outputs = model(X_batch).squeeze()
-        preds = torch.round(outputs)  # 预测标签
+        preds = torch.round(outputs)  # Predicted labels
         y_true.extend(y_batch.tolist())
         y_pred.extend(preds.tolist())
         y_pred_proba.extend(outputs.tolist())
 
-# 计算性能指标
+# Calculate performance metrics
 tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
 tn_t, fp_t, fn_t, tp_t = torch.tensor(tn), torch.tensor(fp), torch.tensor(fn), torch.tensor(tp)
 sn = tp / (tp + fn)
